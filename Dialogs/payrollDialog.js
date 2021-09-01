@@ -38,7 +38,9 @@ class PayrollDialog extends ComponentDialog {
     async askanything(stepContext) {
         let dialogData = await this.payrollStateAccessor.get(stepContext.context, {});
         dialogData.promptSelected = stepContext.result.value;
-        return await stepContext.prompt(TextPromptDialog, `So you have choosen this prompt ${dialogData.promptSelected}`)
+        await stepContext.context.sendActivity(`So you have choosen this prompt ${dialogData.promptSelected}`)
+        return stepContext.endDialog();
+
     }
 }
 

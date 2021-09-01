@@ -31,19 +31,30 @@ class RootDialog extends ComponentDialog {
 
     }
 
+    // async run(context, accessor) {
+    //     try {
+    //         const dialogSet = new DialogSet(accessor);
+    //         dialogSet.add(this);
+    //         const dialogContext = await dialogSet.createContext(context);
+    //         const result = await dialogContext.continueDialog();
+    //         if(result && result.status === DialogTurnStatus.empty) {
+    //             await dialogContext.beginDialog(this.id);
+    //         } else {
+    //             console.log('Dialog stack is empty');
+    //         } 
+    //     } catch(err) {
+    //         console.log(err);
+    //     }
+    // }
+
     async run(context, accessor) {
-        try {
-            const dialogSet = new DialogSet(accessor);
-            dialogSet.add(this);
-            const dialogContext = await dialogSet.createContext(context);
-            const result = await dialogContext.continueDialog();
-            if(result && result.status === DialogTurnStatus.empty) {
-                await dialogContext.beginDialog(this.id);
-            } else {
-                console.log('Dialog stack is empty');
-            } 
-        } catch(err) {
-            console.log(err);
+        const dialogSet = new DialogSet(accessor);
+        dialogSet.add(this);
+
+        const dContext = await dialogSet.createContext(context);
+        const result = await dContext.continueDialog();
+        if(result.status === DialogTurnStatus.empty){
+            await dContext.beginDialog(this.id);
         }
     }
 
@@ -75,18 +86,18 @@ class RootDialog extends ComponentDialog {
                         await innerDc.context.sendActivity('applyLeave');
                         return await innerDc.cancelAllDialogs();
                     }
-                    case 'apply leave':
-                        // await  innerDc.cancelAllDialogs();
-                        await innerDc.beginDialog(applyLeaveDialog);
-                        const messageText = "do you want to resume your previous booking"
-                        const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
-                        await innerDc.prompt(CONFIRM_PROMPT, { prompt: msg });
-                        return { status: DialogTurnStatus.waiting };
-                    case 'payroll':
-                        return await innerDc.beginDialog(payrollDialog);
+                    // case 'apply leave':
+                    //     // await  innerDc.cancelAllDialogs();
+                    //     await innerDc.beginDialog(applyLeaveDialog);
+                    //     const messageText = "do you want to resume your previous booking"
+                    //     const msg = MessageFactory.text(messageText, messageText, InputHints.ExpectingInput);
+                    //     await innerDc.prompt(CONFIRM_PROMPT, { prompt: msg });
+                    //     return { status: DialogTurnStatus.waiting };
+                    // case 'payroll':
+                    //     return await innerDc.beginDialog(payrollDialog);
                     default: {
-                        await innerDc.beginDialog('INTERRUPT_DIALOG', text);
-                        return { status: DialogTurnStatus.waiting };
+                        return await innerDc.beginDialog('INTERRUPT_DIALOG', text);
+                        // return { status: DialogTurnStatus.waiting };
                     }
                     
                 }
@@ -99,18 +110,21 @@ class RootDialog extends ComponentDialog {
     }
 
     async intentStep(stepContext) {
-        const text = stepContext.options.text;
+        const text = stepContext.options;
+        console.log(stepContext.options)
         switch(text) {
             case 'apply leave':
-                await stepContext.beginDialog(applyLeaveDialog);
-                return { status: DialogTurnStatus.waiting };
+                return await stepContext.beginDialog(applyLeaveDialog);
+                // return { status: DialogTurnStatus.waiting };
             case 'payroll':
-                await stepContext.beginDialog(payrollDialog);
-                return { status: DialogTurnStatus.waiting };
+                return await stepContext.beginDialog(payrollDialog);
+                // return { status: DialogTurnStatus.waiting };
         }
+        // return await stepContext.next();
     }
 
     async summaryStep(stepContext) {
+        console.log('hiiiiiiiiiiiiiiiiiiii');
         return await stepContext.prompt('CONFIRM_PROMPT', `You want to continue previous flow`);
     }
 

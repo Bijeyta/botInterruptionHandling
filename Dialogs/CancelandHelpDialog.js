@@ -105,4 +105,4 @@ class CancelAndHelpDialog extends ComponentDialog {
     }
 }
 
-module.exports.CancelAndHelpDialog = CancelAndHelpDialog;
+// module.exports.CancelAndHelpDialog = CancelAndHelpDialog;
