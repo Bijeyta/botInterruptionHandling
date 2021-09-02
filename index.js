@@ -18,11 +18,8 @@ server.listen(3978, () => {
     console.log(`${server.name} is listing to the port ${server.url}`);
 })
 
-//creating memory storage class to store the memory
 const memory = new MemoryStorage();
-//defining conversationState i.e ehat is conversation State
 let conversationState = new ConversationState(memory);
-//activityHandler object
 const rootDialog = new RootDialog(conversationState);
 const mainBot = new BotActivityHandler(conversationState, rootDialog);
 

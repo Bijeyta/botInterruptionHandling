@@ -9,18 +9,14 @@ class BotActivityHandler extends ActivityHandler {
         this.conversationState = conversationState;
         this.rootDialog = rootDialog;
         this.accessor = this.conversationState.createProperty('DialogAccessor')
-        //Message event
 
         this.onMessage(async (context, next) => {
-            // await context.sendActivity(`from user => ${context.activity.text}`);
             await this.rootDialog.run(context, this.accessor);
             await next();
 
             
         });
 
-        //The bot automatically send message when we connect to the bot, This is done through the onConversationUpdate function.
-        //This onConversationUpdate functiion triggers two times 1st when bit enters into the conversation and when user enters into the conversation
         this.onConversationUpdate(async(context, next) => {
             if(context.activity.membersAdded && context.activity.membersAdded[0].id && context.activity.from.id) {
                 await context.sendActivity({

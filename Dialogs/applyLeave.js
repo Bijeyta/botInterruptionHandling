@@ -3,9 +3,6 @@ const { applyLeaveDialog } = require('../Constants/DialogIds')
 const { CardFactory } = require('botbuilder');
 const { confirmleave } = require('../cards/cards');
 
-//Handling
-const { CancelandHelpDialog } = require('./CancelandHelpDialog');
-
 const applyLeaveDialogWF1 = 'helpDialogWF1';
 const ChoicePromptDialog = 'ChoicePromptDialog';
 const NumberPromptDialog = 'NumberPromptDialog';
@@ -22,8 +19,7 @@ class ApplyLeaveDialog extends ComponentDialog {
         this.addDialog(new ChoicePrompt(ChoicePromptDialog));
         this.addDialog(new NumberPrompt(NumberPromptDialog));
         this.addDialog(new TextPrompt(TextPromptDialog));
-        //Component dialog have functionlality called addDialog, So, we can create different dialogs here, Dialogs are just thee conversation Happning between user and the bot.
-        //The most common dialog we use here is Waterfalldialog
+        
         this.addDialog(new WaterfallDialog(applyLeaveDialogWF1, [
             this.askleavetype.bind(this),
             this.askNoOfDays.bind(this),
@@ -39,7 +35,6 @@ class ApplyLeaveDialog extends ComponentDialog {
             prompt: 'Please help me with the type of leave you want to apply',
             choices: ChoiceFactory.toChoices(['Sick Leave', 'Causal Leave', 'Earned Leave'])
         })
-        // return await stepContext.endDialog();
     }
 
     async askNoOfDays(stepContext) {

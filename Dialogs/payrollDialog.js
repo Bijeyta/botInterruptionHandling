@@ -1,6 +1,7 @@
 const { ComponentDialog, WaterfallDialog,ChoicePrompt, ChoiceFactory, TextPrompt } = require('botbuilder-dialogs');
 const { payrollDialog } = require('../Constants/DialogIds')
 const { CardFactory } = require('botbuilder');
+const { CancelAndHelpDialog } = require('./CancelandHelpDialog')
 
 const payrollDialogWF1 = 'helpDialogWF1';
 const ChoicePromptDialog = 'ChoicePromptDialog';
@@ -17,8 +18,7 @@ class PayrollDialog extends ComponentDialog {
 
         this.addDialog(new ChoicePrompt(ChoicePromptDialog));
         this.addDialog(new TextPrompt(TextPromptDialog));
-        //Component dialog have functionlality called addDialog, So, we can create different dialogs here, Dialogs are just thee conversation Happning between user and the bot.
-        //The most common dialog we use here is Waterfalldialog
+
         this.addDialog(new WaterfallDialog(payrollDialogWF1, [
             this.someSuggesstions.bind(this),
             this.askanything.bind(this)
